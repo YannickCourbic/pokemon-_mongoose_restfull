@@ -1,4 +1,3 @@
-const Pokemon = require("../models/PokemonModel");
 export default interface IPokemonService {
     getAllPokemon(page?: number | null,
                   limit?: number | null,

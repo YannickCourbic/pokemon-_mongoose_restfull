@@ -63,7 +63,6 @@ router.get("/search/:search" , (req , res) => {
     const pokemonService = new PokemonServiceImpl();
     pokemonService.searchPokemon(req.params.search)
         .then(result => {
-        console.log(result);
         if(result.length === 0){
             return res.status(404).json({message: "Erreur de paramètre : " , errors: "Le paramètre doit être seulement des lettres , veuillez réessayez avec des critères valides."})
         }
@@ -77,7 +76,6 @@ router.get("/stats/max", (req , res) => {
     const pokemonService = new PokemonServiceImpl();
     pokemonService.maxStatsPokemon(parseInt(req.query.hp) , parseInt(req.query.atk) , parseInt(req.query.def) , parseInt(req.query.spe_atk) ,parseInt(req.query.spe_def) , parseInt(req.query.vit))
         .then(result => {
-        console.log(result)
         res.json({message: "Vous avez récupérée avec succès la statistique maximale",data:result})
         })
         .catch(error => console.error(error))
@@ -125,7 +123,6 @@ router.get("/eggGroups/:egg", (req , res) =>{
 router.post("/create" , (req ,res) => {
     const pokemonService = new PokemonServiceImpl();
     pokemonService.createPokemon(req.body).then(result => {
-        console.log(result);
         res.json({message:"Vous avez crée un pokémon avec succès." , data: result});
     })
 });
@@ -133,16 +130,13 @@ router.post("/create" , (req ,res) => {
 router.put("/update/:id" , (req, res) => {
     const pokemonService = new PokemonServiceImpl();
     pokemonService.updatePokemon(req.body , req.query.id).then(result => {
-        console.log(result);
         res.json({message:`Vous avez modifiée le pokémon ${req.body.name.fr} avec succès.` , data: result});
     })
 });
 router.delete("/remove/:id", (req , res) => {
     const pokemonService = new PokemonServiceImpl();
-    console.log(req.params.id)
     pokemonService.removePokemon(req.params.id)
         .then((result) => {
-        console.log(result)
         res.json({message:`Vous avez supprimer le pokémon avec succès.` , data: result});
     })
         .catch(error => console.error(error))

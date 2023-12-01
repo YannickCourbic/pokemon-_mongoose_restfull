@@ -17,10 +17,6 @@ _
 /pokemon_mongoose_api/src/models/PokemonModel.js,f\3\f35559a231eb414a223f03f6b9d2502fd81b3161
 `
 0pokemon_mongoose_api/src/test/TestApplication.js,0\1\0135b9ddcd9948cdfc976c3008ced051de0f49d8
-f
-6pokemon_mongoose_api/src/services/GenerationService.js,8\b\8be12e28c67b893bd3b982c942d3ec3e9aa21120
-f
-6pokemon_mongoose_api/src/services/GenerationService.ts,8\c\8c3a2546197bf6a8cc9b2b9f3dbf8bf33f08a607
 j
 :pokemon_mongoose_api/src/services/GenerationServiceImpl.ts,7\2\7229400755ec465a56d3e6f2fddf4400a7f53b46
 d
@@ -45,13 +41,5 @@ a
 1pokemon_mongoose_api/src/services/ITypeService.ts,6\2\62e18f34569efcc29527d173fca3b4c6338b3956
 d
 4pokemon_mongoose_api/src/services/TypeServiceImpl.ts,7\b\7b4bf18b127efa72b7e3c2a107ee5b9ffe174c7c
-R
-"pokemon_mongoose_api/src/Result.js,6\1\61908a30e8f8eeed44600f358336813f5d3aac43
-R
-"pokemon_mongoose_react/src/App.css,6\b\6be3300a23c9452557a0718d1bbb947af7da7b02
-S
-#pokemon_mongoose_react/src/main.tsx,f\3\f3d93879905ef335b39acedebdb2514d7ba87c20
-T
-$pokemon_mongoose_react/src/index.css,2\c\2c93732d5fba65497b13cd0ff29f8ddde49dcc8d
-R
-"pokemon_mongoose_react/src/App.tsx,8\4\84445e9bf774ce50ea88a89120b4fa8d62c31afe
+<
+package.json,7\0\7030d0b2f71b999ff89a343de08c414af32fc93a

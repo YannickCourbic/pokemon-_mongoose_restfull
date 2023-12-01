@@ -1,6 +1,5 @@
 import IPokemonService from "./IPokemonService";
 import * as mongoose from "mongoose";
-const Type = require("../models/TypeModel");
 const Pokemon = require("../models/PokemonModel");
 const Generations = require("../models/GenerationModel");
 class PokemonServiceImpl implements IPokemonService{
@@ -33,9 +32,9 @@ class PokemonServiceImpl implements IPokemonService{
             }]
         );
     }
-    getAllPokemon = async (page?: number | null, limit?: number | null, region?: string | null, gen?: number | null, name?: string, lang?: string, id?: string, type?: string, evolution?: number | null, string?: string | null): Promise<[any, any[]]>  =>{
+    getAllPokemon = async (page?: number | null, limit?: number | null, region?: string | null, gen?: number, name?: string, lang?: string, id?: string, type?: string, evolution?: number | null, string?: string | null): Promise<[any, any[]]>  =>{
         const pipeline = [];
-        const errors = [];
+        // const errors = [];
         pipeline.push(
             {
                 $lookup: {
@@ -113,6 +112,7 @@ class PokemonServiceImpl implements IPokemonService{
 
 
         }
+        // @ts-ignore
         if(!isNaN(gen)){
             pipeline.push(
                 {$match: {'generation.gen': gen}}
@@ -127,7 +127,9 @@ class PokemonServiceImpl implements IPokemonService{
             })
         }
 
+        // @ts-ignore
         if (!isNaN(page)) {
+            // @ts-ignore
             let offset = (page - 1) * limit;
             pipeline.push(
                 {
@@ -135,7 +137,8 @@ class PokemonServiceImpl implements IPokemonService{
                 }
             );
         }
-         if(!isNaN(limit)){
+         // @ts-ignore
+        if(!isNaN(limit)){
             pipeline.push({
                 $limit : limit
             })
@@ -201,7 +204,7 @@ class PokemonServiceImpl implements IPokemonService{
         ])
     }
 
-    searchPokemon = async (name: string | null, lang?: string | null): Promise<any> => {
+    searchPokemon = async (name: string | null): Promise<any> => {
         const criteriaSearch = {
             'name.fr': {$regex: name, $options: 'i'}
         };
