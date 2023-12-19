@@ -206,11 +206,35 @@ class PokemonServiceImpl implements IPokemonService{
 
     searchPokemon = async (name: string | null): Promise<any> => {
         const criteriaSearch = {
-            'name.fr': {$regex: name, $options: 'i'}
+            'name.fr': { $regex: name, $options: 'i' },
         };
 
-        return await Pokemon.find(criteriaSearch).limit(10);
-    }
+        return await Pokemon.aggregate([
+            {
+                $match: criteriaSearch,
+            },
+            {
+                $lookup: {
+                    from: 'generations',
+                    localField: 'generationId',
+                    foreignField: '_id',
+                    as: 'generation',
+                },
+            },
+            {
+                $lookup: {
+                    from: 'types',
+                    localField: 'typeId',
+                    foreignField: '_id',
+                    as: 'type',
+                },
+            },
+            {
+                $limit: 10,
+            },
+        ]);
+    };
+
 
     maxStatsPokemon = async(hp?: number | null, atk?: number | null, def?: number | null, speAtk?: number | null, speDef?: number | null, vit?: number | null): Promise<any> => {
         if(hp === 1){

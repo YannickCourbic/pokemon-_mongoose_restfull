@@ -23,15 +23,36 @@ router.get("/gen/:gen" , async (req, res) => {
             $match: { gen : parseInt(req.params.gen)}
         },
         {
+            $unwind: '$pokemons', // Décompacte le tableau des Pokémon
+        },
+        {
             $lookup: {
-                from : 'pokemons',
-                localField: '_id',
-                foreignField: 'generationId',
-                as: 'pokemons'
-            }
-        }
+                from: 'pokemons', // Nom de la collection des Pokémon
+                localField: 'pokemons',
+                foreignField: '_id',
+                as: 'pokemonData',
+            },
+        },
+        {
+            $unwind: '$pokemonData', // Décompacte le tableau résultant
+        },
+        {
+            $lookup: {
+                from: 'types', // Nom de la collection des types
+                localField: 'pokemonData.typeId',
+                foreignField: '_id',
+                as: 'typeData',
+            },
+        },
+
+
+
+
+
+
+
     ]).then(result => {
-        res.json({message: `vous avez récupérée touts les pokémons de la génération n° ${req.params.gen}.` , data :result[0].pokemons})
+        res.json({message: `vous avez récupérée touts les pokémons de la génération n° ${req.params.gen}.` , generation :result})
     })
 })
 
@@ -46,7 +67,7 @@ router.get("/all" ,  (req , res) => {
                     return res.status(404).json({ message: "Un erreur est survenue..." , errors: `la page n° ${req.query.page} est supérieur au maximum de page : ${PageMax} `});
                 }
             }
-            return res.json({ message: "Vous avez récupérée la liste de  pokémons avec succès." , data: result});
+            return res.json({ message: "Vous avez récupérée la liste de  pokémons avec succès." , data: result , total: await Pokemon.countDocuments()});
         })
         .catch((error) => {
             if(parseInt(req.query.limit) <= 0){
@@ -64,9 +85,9 @@ router.get("/search/:search" , (req , res) => {
     pokemonService.searchPokemon(req.params.search)
         .then(result => {
         if(result.length === 0){
-            return res.status(404).json({message: "Erreur de paramètre : " , errors: "Le paramètre doit être seulement des lettres , veuillez réessayez avec des critères valides."})
+            return res.json({message: "Vous avez rechercher une liste de pokémon avec succès." , data:  [] })
         }
-        return res.json({message: "Vous avez rechercher une liste de pokémon avec succès." , data: result})
+            return res.json({message: "Vous avez rechercher une liste de pokémon avec succès." , data:  result })
         })
         .catch(error => {
             return res.status(404).json({message: "Erreur de paramètre : " , error : error})

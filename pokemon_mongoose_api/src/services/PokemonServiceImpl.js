@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose = require("mongoose");
-var Type = require("../models/TypeModel");
 var Pokemon = require("../models/PokemonModel");
 var Generations = require("../models/GenerationModel");
 var PokemonServiceImpl = /** @class */ (function () {
@@ -77,12 +76,12 @@ var PokemonServiceImpl = /** @class */ (function () {
             });
         }); };
         this.getAllPokemon = function (page, limit, region, gen, name, lang, id, type, evolution, string) { return __awaiter(_this, void 0, void 0, function () {
-            var pipeline, errors, offset;
+            var pipeline, offset;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         pipeline = [];
-                        errors = [];
+                        // const errors = [];
                         pipeline.push({
                             $lookup: {
                                 from: 'generations',
@@ -144,6 +143,7 @@ var PokemonServiceImpl = /** @class */ (function () {
                                 });
                             }
                         }
+                        // @ts-ignore
                         if (!isNaN(gen)) {
                             pipeline.push({ $match: { 'generation.gen': gen } });
                         }
@@ -155,12 +155,14 @@ var PokemonServiceImpl = /** @class */ (function () {
                                 $match: { 'type.name': type }
                             });
                         }
+                        // @ts-ignore
                         if (!isNaN(page)) {
                             offset = (page - 1) * limit;
                             pipeline.push({
                                 $skip: offset,
                             });
                         }
+                        // @ts-ignore
                         if (!isNaN(limit)) {
                             pipeline.push({
                                 $limit: limit
@@ -230,15 +232,38 @@ var PokemonServiceImpl = /** @class */ (function () {
                 }
             });
         }); };
-        this.searchPokemon = function (name, lang) { return __awaiter(_this, void 0, void 0, function () {
+        this.searchPokemon = function (name) { return __awaiter(_this, void 0, void 0, function () {
             var criteriaSearch;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         criteriaSearch = {
-                            'name.fr': { $regex: name, $options: 'i' }
+                            'name.fr': { $regex: name, $options: 'i' },
                         };
-                        return [4 /*yield*/, Pokemon.find(criteriaSearch).limit(10)];
+                        return [4 /*yield*/, Pokemon.aggregate([
+                                {
+                                    $match: criteriaSearch,
+                                },
+                                {
+                                    $lookup: {
+                                        from: 'generations',
+                                        localField: 'generationId',
+                                        foreignField: '_id',
+                                        as: 'generation',
+                                    },
+                                },
+                                {
+                                    $lookup: {
+                                        from: 'types',
+                                        localField: 'typeId',
+                                        foreignField: '_id',
+                                        as: 'type',
+                                    },
+                                },
+                                {
+                                    $limit: 10,
+                                },
+                            ])];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
